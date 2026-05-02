@@ -1,4 +1,4 @@
-# Dumbledore 邓布利多
+# Dumbledore 邓布利多 - Agent Native 知识管理方案
 
 > Give every piece of knowledge a place to live, a reason to stay, and a skill it may become.
 
@@ -10,7 +10,7 @@
 - 反复出现的痛点，变成 Agent Skill 建议。
 - 确定性、可重复的动作，变成 scripts。
 
-一句话：**Dumbledore 把你的阅读输入，炼成 Agent 可以继承的知识、流程和能力。**
+一句话：**Dumbledore 把你的阅读输入，炼成 Agent 可以继承的知识、流程和能力。让你的 Agent 替你学习所有你不想学习的知识。**
 
 > 名字灵感来自《哈利波特》里的邓布利多。本项目是非官方、非关联的开源框架，不隶属于 J.K. Rowling、Warner Bros. Discovery 或 Wizarding World 相关权利方。
 
