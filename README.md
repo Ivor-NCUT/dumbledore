@@ -58,7 +58,7 @@ curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.s
 在 Codex、Claude Code、OpenClaw、Manus 或其他 Agent 中说：
 
 ```text
-帮我安装 Dumbledore，并创建我自己的 GitHub 知识库仓库。
+帮我安装 Dumbledore，并创建我自己的 GitHub 知识库仓库：https://github.com/Ivor-NCUT/dumbledore
 ```
 
 Agent 应该使用 `skills/dumbledore-onboarding/SKILL.md` 的流程引导你完成安装。
