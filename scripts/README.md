@@ -23,3 +23,13 @@ curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.s
 ```
 
 它会创建用户自己的 Dumbledore 知识库仓库，并尽量引导用户推送到自己的 GitHub，而不是写入上游仓库。
+
+### `publish.sh`
+
+确认写入后，Agent 用它把最终产物发布到用户自己绑定的 GitHub 仓库。
+
+```bash
+scripts/publish.sh "chore: update knowledge from confirmed intake"
+```
+
+它会检查 `origin`，拒绝把用户知识推送到上游 `Ivor-NCUT/dumbledore`，然后执行 `git add`、`commit`、`pull --rebase` 和 `push`。

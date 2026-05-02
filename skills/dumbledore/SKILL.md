@@ -12,9 +12,11 @@ description: |
 
 - 先理解，再分类，再提案，再写入。
 - 用户确认前，不修改仓库。
+- 用户确认后，最终产物要自动提交并推送到用户自己绑定的 GitHub 仓库。
 - 每次处理材料，都要判断它是否应该进入知识库、是否能沉淀方法论、是否暴露痛点、是否值得做成 Agent Skill。
 - 不要把所有东西都写成 skill。知识、script、SOP、skill 要分清。
 - 录入时保留来源、日期、隐私级别和可追溯关系。
+- 不得把用户知识材料推送到上游模板仓库 `Ivor-NCUT/dumbledore`。
 
 ## 启动条件
 
@@ -121,7 +123,12 @@ description: |
 ### 5. 预计修改文件
 - `path/to/file`
 
-### 6. 需要你确认的问题
+### 6. 发布目标
+- 当前绑定 GitHub 仓库：
+- 当前分支：
+- 是否会自动提交并推送：
+
+### 7. 需要你确认的问题
 - 如果没有问题，等待用户说“确认写入”。
 ```
 
@@ -146,6 +153,10 @@ description: |
 
 确认后按提案写入：
 
+0. 发布前先确认当前仓库绑定：
+   - 检查 `git remote get-url origin`。
+   - 如果没有 `origin`，先停止并引导用户运行 onboarding，把仓库绑定到自己的 GitHub。
+   - 如果 `origin` 指向 `https://github.com/Ivor-NCUT/dumbledore.git` 或 `git@github.com:Ivor-NCUT/dumbledore.git`，停止。上游仓库只用于框架贡献，不保存用户知识。
 1. 在 `brain/sources/` 创建或更新来源记录。
 2. 在 `atoms/atoms.jsonl` 追加知识原子。
 3. 根据需要创建或更新：
@@ -156,6 +167,11 @@ description: |
 4. 在 `brain/skill-ideas/` 创建 skill 建议。
 5. 只有当用户明确要求实现 skill 时，才创建 `skills/{skill-name}/SKILL.md`。
 6. 只有当用户明确要求实现 script 时，才创建 `scripts/{script-name}`。
+7. 将最终产物发布到用户绑定的 GitHub 仓库：
+   - 优先运行 `scripts/publish.sh "chore: update knowledge from confirmed intake"`。
+   - 如果脚本不可用，手动执行 `git add -A`、`git commit -m "chore: update knowledge from confirmed intake"`、`git pull --rebase origin <branch>`、`git push -u origin <branch>`。
+   - 如果 rebase 有冲突，停止并向用户说明冲突文件，不要强推。
+   - 不要使用 `git push --force`。
 
 ### Step 6：完成后汇报
 
@@ -164,6 +180,7 @@ description: |
 - 已写入什么。
 - 新增或修改了哪些文件。
 - 生成了哪些 skill 建议。
+- 已提交并推送到哪个 GitHub 仓库和分支。
 - 还有哪些待确认问题。
 
 ## 判断标准

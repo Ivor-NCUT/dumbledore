@@ -25,7 +25,7 @@
 Dumbledore 的设计目标是反过来：
 
 - **GitHub 是真源**：所有长期知识、方法论、skill 建议和变更记录都进入仓库。
-- **Agent 先提案再写入**：任何材料录入前，Agent 必须先给你一份更新提案，等你确认后再修改文件。
+- **Agent 先提案再发布**：任何材料录入前，Agent 必须先给你一份更新提案，等你确认后再写入文件、提交并推送到你自己的 GitHub 仓库。
 - **知识会长出能力**：材料里的痛点、方法论和 SOP 会被识别出来，成为未来 Agent Skill 的候选。
 - **人类可读，Agent 可执行**：Markdown 给人读，JSONL 给机器检索，Skill 给 Agent 执行。
 
@@ -41,7 +41,7 @@ Dumbledore 的设计目标是反过来：
 - 有没有确定性任务更适合写成 script？
 - 如果要更新仓库，会改哪些文件？
 
-然后它会停下来，等你确认。
+然后它会停下来，等你确认。确认后，它会把最终产物更新到你自己绑定的 GitHub 仓库。
 
 ## 快速开始
 
@@ -96,6 +96,8 @@ Agent 应该先读取：
 
 它才会真正修改知识库。
 
+确认写入后，Dumbledore 会自动运行发布流程，把智能分析出的知识、SOP、脚本建议、skill 建议等最终产物提交并推送到当前绑定的 `origin` 仓库。
+
 ## 重要边界
 
 `Ivor-NCUT/dumbledore` 是框架上游仓库，不是用户的私人知识库。
@@ -107,6 +109,8 @@ Agent 应该先读取：
 - 贡献框架本身：fork `Ivor-NCUT/dumbledore` 后提交 PR。
 
 不要把私人文章、会议记录、客户材料直接写入上游仓库或公开 fork。
+
+如果 `origin` 指向上游 `Ivor-NCUT/dumbledore`，Dumbledore 必须停止发布。用户知识只能推送到用户自己的 GitHub 仓库。
 
 ## 标准工作流
 
@@ -122,6 +126,8 @@ Dumbledore 阅读并理解
 你确认
     ↓
 写入 GitHub 仓库
+    ↓
+自动 commit + push 到用户自己的 origin
     ↓
 未来 Agent 可读取、检索、复用、继续演化
 ```
@@ -176,6 +182,7 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - 会生成哪些知识原子。
 - 会提出哪些 skill 建议。
 - 如果目标是 OpenClaw，会补充 OpenClaw 类型、目录结构、frontmatter、`references/`、`data/`、测试和公开版审计。
+- 会提交并推送到哪个用户绑定仓库。
 - 有什么隐私或版权风险。
 
 ### 3. Skill 是方法论的软件化
@@ -193,6 +200,7 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - 主入口 Agent Skill：`skills/dumbledore/SKILL.md`
 - Onboarding Agent Skill：`skills/dumbledore-onboarding/SKILL.md`
 - 一行命令安装脚本：`install.sh`
+- 自动发布脚本：`scripts/publish.sh`
 - OpenClaw skill 创建适配：`brain/methods/openclaw-skill-creation.md`
 - Agent 操作协议：`AGENTS.md`
 - 隐私与版权边界：`ACCESS_POLICY.md`

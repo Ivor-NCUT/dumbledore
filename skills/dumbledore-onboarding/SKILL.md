@@ -12,6 +12,8 @@ description: |
 
 - 用户的数据应该进入用户自己的 GitHub 仓库。
 - 上游仓库只作为框架模板和更新来源。
+- 用户自己的 GitHub 仓库绑定为当前知识库的 `origin` remote。
+- 完成绑定后，Dumbledore 在用户确认写入时会自动提交并推送最终产物。
 - 优先使用一行命令完成安装；如果用户的 Agent 能操作终端，你可以直接帮用户运行。
 - 如果用户没有 GitHub CLI 或未登录，给出最短的手动补救路径。
 - 不要在上游仓库中录入用户的知识材料。
@@ -27,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.s
 1. 下载 Dumbledore 模板。
 2. 在本地创建用户自己的知识库目录。
 3. 初始化 Git 仓库。
-4. 如果 `gh` 已登录，引导用户创建并推送到自己的 GitHub 仓库。
+4. 如果 `gh` 已登录，引导用户创建并推送到自己的 GitHub 仓库，并把它绑定为 `origin`。
 
 ## Agent 一句话安装
 
@@ -93,6 +95,15 @@ cd ~/dumbledore-knowledge
 - `origin` 不应指向 `https://github.com/Ivor-NCUT/dumbledore.git`，除非用户明确是在维护上游框架。
 - `skills/dumbledore/SKILL.md` 存在。
 - `AGENTS.md` 存在。
+- `scripts/publish.sh` 存在且可执行。
+
+### Step 6：说明自动发布
+
+告诉用户：
+
+> 以后你确认写入后，Dumbledore 会把分析出的知识、SOP、脚本建议和 skill 建议写入本地文件，然后自动提交并推送到这个绑定的 GitHub 仓库。
+
+如果用户不想自动推送，必须在任务开始前明确说“只写本地，不推送”。
 
 ## 常见情况
 
@@ -126,4 +137,5 @@ gh repo create dumbledore-knowledge --private --source=. --remote=origin --push
 - 本地路径。
 - GitHub 仓库地址。
 - 是否为 private。
+- 是否已绑定为 `origin`。
 - 以后如何触发 Dumbledore。
