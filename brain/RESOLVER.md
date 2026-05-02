@@ -36,6 +36,8 @@
 - 材料中有明确方法论、流程、框架或案例库。
 - 这个能力可以被其他材料或项目复用。
 
+如果用户提到 OpenClaw，或 skill 可能给 OpenClaw 使用，必须同时生成 OpenClaw 适配建议：Workflow / Role / Data-driven / Hybrid、目录结构、frontmatter、触发词、`references/`、`data/`、测试和公开版审计。
+
 不建议做成 skill 的情况：
 
 - 只是一次性观点。
@@ -58,4 +60,3 @@
 - 把会议记录拆成发言人段落。
 - 校验 `atoms.jsonl` 格式。
 - 生成知识库索引。
-

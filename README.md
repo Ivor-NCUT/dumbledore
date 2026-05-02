@@ -175,6 +175,7 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - 准备写到哪里。
 - 会生成哪些知识原子。
 - 会提出哪些 skill 建议。
+- 如果目标是 OpenClaw，会补充 OpenClaw 类型、目录结构、frontmatter、`references/`、`data/`、测试和公开版审计。
 - 有什么隐私或版权风险。
 
 ### 3. Skill 是方法论的软件化
@@ -192,6 +193,7 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - 主入口 Agent Skill：`skills/dumbledore/SKILL.md`
 - Onboarding Agent Skill：`skills/dumbledore-onboarding/SKILL.md`
 - 一行命令安装脚本：`install.sh`
+- OpenClaw skill 创建适配：`brain/methods/openclaw-skill-creation.md`
 - Agent 操作协议：`AGENTS.md`
 - 隐私与版权边界：`ACCESS_POLICY.md`
 - 知识分类决策树：`brain/RESOLVER.md`

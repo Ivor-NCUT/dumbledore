@@ -36,6 +36,14 @@ tags: []
 
 ## Agent Skill 建议
 
+如果目标运行时包含 OpenClaw，skill 建议页还应该包含：
+
+- OpenClaw 类型：Workflow / Role / Data-driven / Hybrid。
+- 目录结构：`SKILL.md`、`references/`、`data/`、`scripts/`。
+- Frontmatter：`name`、`description` 和触发词。
+- 数据边界：长期数据放在 `data/`，不要放在 `memory/`。
+- 验证方式：触发测试、边界测试、公开版安全审计。
+
 ## 关联页面
 ```
 

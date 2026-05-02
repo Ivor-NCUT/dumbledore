@@ -21,6 +21,25 @@ tags: []
 
 ## 工作流程
 
+## 目标运行时
+
+- Codex:
+- Claude Code:
+- OpenClaw:
+- Manus:
+
+## OpenClaw 适配
+
+- OpenClaw 类型：Workflow | Role | Data-driven | Hybrid
+- 建议目录结构：
+- Frontmatter 草案：
+- `references/` 需求：
+- `data/` 需求：
+- `scripts/` 需求：
+- 示例调用：
+- 验证方式：
+- 公开版审计：
+
 ## 需要读取的知识包
 
 ## 可能需要的 scripts
@@ -28,4 +47,3 @@ tags: []
 ## 风险和边界
 
 ## 验收标准
-

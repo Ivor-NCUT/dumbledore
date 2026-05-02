@@ -34,6 +34,11 @@ description: |
 4. `brain/RESOLVER.md`
 5. `brain/schema.md`
 
+如果材料涉及 OpenClaw、OpenClaw skill、OpenClaw agent、OpenClaw 安装或跨 Agent 运行时适配，再读取：
+
+6. `brain/methods/openclaw-skill-creation.md`
+7. `templates/openclaw-skill-package.md`
+
 如果用户材料和某个已有主题相关，再读取对应的 `brain/` 页面。
 
 ## 工作流程
@@ -94,6 +99,17 @@ description: |
 - 输出：
 - 为什么适合做成 skill：
 - 优先级：
+- 目标运行时：
+- OpenClaw 适配：
+  - 类型：Workflow | Role | Data-driven | Hybrid
+  - 目录结构：
+  - Frontmatter 草案：
+  - `references/` 需求：
+  - `data/` 需求：
+  - `scripts/` 需求：
+  - 示例调用：
+  - 验证方式：
+  - 公开版审计：
 
 ### 4. Script 建议
 - 脚本名：
@@ -110,6 +126,8 @@ description: |
 ```
 
 如果没有 skill 或 script 建议，也要明确写“暂无”。
+
+如果目标运行时没有 OpenClaw，也要明确写“OpenClaw 适配：暂无”。如果用户提到 OpenClaw，必须填完整 OpenClaw 适配，不要只给通用 skill 建议。
 
 ### Step 4：等待确认
 
@@ -182,6 +200,28 @@ description: |
 - 只是一次性总结。
 - 可以用简单脚本解决。
 - 没有可复用流程。
+
+### OpenClaw Skill
+
+当 skill 目标包含 OpenClaw 时，必须进一步判断类型：
+
+- Workflow：有稳定步骤和输入输出。
+- Role：重点是专家身份、风格、评审标准。
+- Data-driven：需要读取档案、案例库、表格或长期资料。
+- Hybrid：同时包含角色、流程和资料。
+
+OpenClaw skill 建议必须遵守：
+
+- `SKILL.md` frontmatter 至少包含 `name` 和 `description`。
+- 触发词写在 `description` 中，不要只写在正文里。
+- 不要使用未确认支持的 frontmatter 字段，例如 `version`。
+- 详细资料放在 `references/`。
+- 长期数据放在 `data/`，不要放在 `memory/`。
+- 至少给 2 个真实调用例子。
+- 创建文件前先展示草案并等待用户确认。
+- 公开发布前检查个人信息、本地路径、内部项目名、密钥和 token。
+
+如果需求需要独立身份、长期记忆、工具权限、团队协作或持续自我改进，优先建议创建 OpenClaw agent，而不是只创建 skill。
 
 ### Script
 
