@@ -1,0 +1,23 @@
+{
+  "skill_name": "dumbledore",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "这是一篇关于 AI Agent 如何管理个人知识库的文章。请用 dumbledore 读取后帮我录入知识库，并判断能不能做成新的 Agent Skill。",
+      "expected_output": "先输出更新提案，不直接写入文件；提案中包含入库判断、知识原子、方法论、痛点、skill 建议、预计修改文件和等待确认。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我发你一段会议记录，里面有几个客户痛点和一个运营 SOP。用邓布利多帮我整理到仓库。",
+      "expected_output": "识别会议记录的隐私级别，提出 sources、atoms、problems、methods 和 skill-ideas 的写入方案，并要求用户确认后再执行。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "这篇文章只是一个新闻快讯，内容很短，你看看有没有必要入库。",
+      "expected_output": "允许判断不建议入库或部分入库，并解释长期价值、可信度和是否需要 skill/script 的判断。",
+      "files": []
+    }
+  ]
+}

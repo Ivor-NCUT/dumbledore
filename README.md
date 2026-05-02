@@ -1,0 +1,175 @@
+# Dumbledore 邓布利多
+
+> Give every piece of knowledge a place to live, a reason to stay, and a skill it may become.
+
+**Dumbledore** 是一套 Agent Native 知识管理开源框架。它让你的 Agent 不再只是“总结文章”，而是像一位知识库校长一样，把每份材料分配到正确的位置：
+
+- 值得长期保存的，进入知识库。
+- 可以拆成判断标准的，变成知识原子。
+- 能指导项目的，沉淀为 SOP。
+- 反复出现的痛点，变成 Agent Skill 建议。
+- 确定性、可重复的动作，变成 scripts。
+
+一句话：**Dumbledore 把你的阅读输入，炼成 Agent 可以继承的知识、流程和能力。**
+
+> 名字灵感来自《哈利波特》里的邓布利多。本项目是非官方、非关联的开源框架，不隶属于 J.K. Rowling、Warner Bros. Discovery 或 Wizarding World 相关权利方。
+
+## 为什么需要 Dumbledore
+
+大多数知识库死在三个地方：
+
+1. 只存内容，不存判断。
+2. 只做摘要，不形成行动流程。
+3. 只服务当前对话，换个 Agent 就失忆。
+
+Dumbledore 的设计目标是反过来：
+
+- **GitHub 是真源**：所有长期知识、方法论、skill 建议和变更记录都进入仓库。
+- **Agent 先提案再写入**：任何材料录入前，Agent 必须先给你一份更新提案，等你确认后再修改文件。
+- **知识会长出能力**：材料里的痛点、方法论和 SOP 会被识别出来，成为未来 Agent Skill 的候选。
+- **人类可读，Agent 可执行**：Markdown 给人读，JSONL 给机器检索，Skill 给 Agent 执行。
+
+## 它能做什么
+
+当你发来一篇文章、一段会议记录、一条推文串、一个录音转写或一份项目文档时，Dumbledore 会先回答：
+
+- 这份材料值不值得进知识库？
+- 哪些关键知识应该拆成知识原子？
+- 它暴露了什么痛点、问题或反模式？
+- 它包含什么方法论、SOP 或项目流程？
+- 它建议我们未来构建什么 Agent Skill？
+- 有没有确定性任务更适合写成 script？
+- 如果要更新仓库，会改哪些文件？
+
+然后它会停下来，等你确认。
+
+## 快速开始
+
+把这个仓库推到 GitHub 后，在 Codex、Claude Code 或其他支持本地仓库的 Agent 工具中打开它。
+
+当你要处理材料时，对 Agent 说：
+
+```text
+用 dumbledore 处理这份材料。
+```
+
+Agent 应该先读取：
+
+1. `AGENTS.md`
+2. `ACCESS_POLICY.md`
+3. `USER.md`
+4. `brain/RESOLVER.md`
+5. `brain/schema.md`
+6. `skills/dumbledore/SKILL.md`
+
+然后输出“更新提案”。只有当你明确说：
+
+```text
+确认写入
+```
+
+或：
+
+```text
+可以更新仓库
+```
+
+它才会真正修改知识库。
+
+## 标准工作流
+
+```text
+你发送材料
+    ↓
+Dumbledore 阅读并理解
+    ↓
+判断：知识库 / SOP / 痛点 / skill 建议 / script 建议 / 不入库
+    ↓
+输出更新提案
+    ↓
+你确认
+    ↓
+写入 GitHub 仓库
+    ↓
+未来 Agent 可读取、检索、复用、继续演化
+```
+
+## 目录结构
+
+```text
+.
+├── AGENTS.md                    # 所有 Agent 的仓库操作协议
+├── ACCESS_POLICY.md             # 隐私、版权、写入与发布边界
+├── USER.md                      # 用户长期偏好、判断标准和项目背景
+├── brain/
+│   ├── RESOLVER.md              # 新材料应该放在哪里的决策树
+│   ├── schema.md                # 知识页面和知识原子的格式规范
+│   ├── inbox/                   # 待处理材料
+│   ├── sources/                 # 原始材料索引与来源记录
+│   ├── concepts/                # 概念、原则、判断标准
+│   ├── methods/                 # 方法论、SOP、项目流程
+│   ├── problems/                # 痛点、问题、反复出现的阻塞
+│   ├── projects/                # 项目上下文
+│   ├── skill-ideas/             # 待构建 Agent Skill 建议
+│   └── reports/                 # 阶段性知识整理报告
+├── atoms/
+│   ├── atoms.jsonl              # 知识原子库
+│   └── README.md
+├── skills/
+│   └── dumbledore/              # 管理本仓库的主入口 Agent Skill
+├── scripts/
+│   └── README.md                # 未来自动化脚本入口
+└── templates/
+    ├── intake-proposal.md       # 写入前提案模板
+    ├── source.md                # 原始材料记录模板
+    ├── knowledge-page.md        # 知识页模板
+    └── skill-idea.md            # Agent Skill 建议模板
+```
+
+## 核心理念
+
+### 1. 知识不是笔记，是可继承资产
+
+一篇文章真正有价值的部分，不是“这篇文章讲了什么”，而是它能不能在未来帮 Agent 做判断、给建议、搭流程、建 skill。
+
+### 2. 入库前必须先提案
+
+Dumbledore 默认不直接改仓库。它会先告诉你：
+
+- 为什么值得记录。
+- 准备写到哪里。
+- 会生成哪些知识原子。
+- 会提出哪些 skill 建议。
+- 有什么隐私或版权风险。
+
+### 3. Skill 是方法论的软件化
+
+如果一篇材料里有稳定流程，Dumbledore 不会只把它写成摘要。它会判断这套流程是否值得变成 Agent Skill。
+
+### 4. GitHub 是 Agent 的公共书架
+
+用 GitHub 管知识，不只是为了版本管理。更重要的是：任何新的 Agent 产品、本地工具、自动化脚本，都可以读取同一套真源。
+
+## 当前状态
+
+这是 Dumbledore 的第一版仓库骨架，已经包含：
+
+- 主入口 Agent Skill：`skills/dumbledore/SKILL.md`
+- Agent 操作协议：`AGENTS.md`
+- 隐私与版权边界：`ACCESS_POLICY.md`
+- 知识分类决策树：`brain/RESOLVER.md`
+- 知识原子 schema：`brain/schema.md`
+- 知识原子库：`atoms/atoms.jsonl`
+- 写入提案、来源页、知识页、skill 建议模板
+
+## 适合谁
+
+- 想把阅读材料沉淀成个人知识系统的人。
+- 想让 Agent 长期记住自己方法论的人。
+- 想把文章、会议、课程、播客变成 SOP 和 Agent Skill 的人。
+- 想用 GitHub 作为个人数字分身知识中枢的人。
+- 想构建“会进化的第二大脑”，但不想再手动整理一堆笔记的人。
+
+## License
+
+待定。建议开源发布前补充明确许可证，例如 MIT、Apache-2.0 或 CC BY-NC 4.0。

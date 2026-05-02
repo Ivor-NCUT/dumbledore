@@ -1,0 +1,44 @@
+# Intake Proposal
+
+## 材料信息
+
+- 标题：
+- 类型：
+- 来源：
+- 日期：
+- 隐私级别：
+
+## 是否建议入库
+
+结论：
+
+理由：
+
+## 建议写入内容
+
+### 知识原子
+
+```json
+{}
+```
+
+### 知识页
+
+- `brain/sources/`
+- `brain/concepts/`
+- `brain/methods/`
+- `brain/problems/`
+- `brain/skill-ideas/`
+
+## 痛点与问题
+
+## 方法论与 SOP
+
+## Agent Skill 建议
+
+## Script 建议
+
+## 风险与边界
+
+## 预计修改文件
+
