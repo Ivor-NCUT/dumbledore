@@ -45,7 +45,27 @@ Dumbledore 的设计目标是反过来：
 
 ## 快速开始
 
-把这个仓库推到 GitHub 后，在 Codex、Claude Code 或其他支持本地仓库的 Agent 工具中打开它。
+### 一行命令安装
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.sh | bash
+```
+
+这条命令会把 Dumbledore 复制成你自己的本地知识库。如果你已经安装并登录 GitHub CLI，它还会引导你创建自己的 GitHub 仓库。
+
+### 一句话给 Agent
+
+在 Codex、Claude Code、OpenClaw、Manus 或其他 Agent 中说：
+
+```text
+帮我安装 Dumbledore，并创建我自己的 GitHub 知识库仓库。
+```
+
+Agent 应该使用 `skills/dumbledore-onboarding/SKILL.md` 的流程引导你完成安装。
+
+### 开始处理材料
+
+把你自己的 Dumbledore 仓库推到 GitHub 后，在 Codex、Claude Code 或其他支持本地仓库的 Agent 工具中打开它。
 
 当你要处理材料时，对 Agent 说：
 
@@ -75,6 +95,18 @@ Agent 应该先读取：
 ```
 
 它才会真正修改知识库。
+
+## 重要边界
+
+`Ivor-NCUT/dumbledore` 是框架上游仓库，不是用户的私人知识库。
+
+推荐方式：
+
+- 个人知识管理：用 onboarding 创建一个新的 private repo。
+- 团队知识管理：在团队 GitHub 组织下创建 private repo。
+- 贡献框架本身：fork `Ivor-NCUT/dumbledore` 后提交 PR。
+
+不要把私人文章、会议记录、客户材料直接写入上游仓库或公开 fork。
 
 ## 标准工作流
 
@@ -116,9 +148,12 @@ Dumbledore 阅读并理解
 │   ├── atoms.jsonl              # 知识原子库
 │   └── README.md
 ├── skills/
-│   └── dumbledore/              # 管理本仓库的主入口 Agent Skill
+│   ├── dumbledore/              # 管理本仓库的主入口 Agent Skill
+│   └── dumbledore-onboarding/   # 安装和私有仓库初始化流程
 ├── scripts/
-│   └── README.md                # 未来自动化脚本入口
+│   └── README.md                # 自动化脚本说明
+├── install.sh                   # 一行命令安装入口
+├── ONBOARDING.md                # 安装和私有仓库策略
 └── templates/
     ├── intake-proposal.md       # 写入前提案模板
     ├── source.md                # 原始材料记录模板
@@ -155,6 +190,8 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 这是 Dumbledore 的第一版仓库骨架，已经包含：
 
 - 主入口 Agent Skill：`skills/dumbledore/SKILL.md`
+- Onboarding Agent Skill：`skills/dumbledore-onboarding/SKILL.md`
+- 一行命令安装脚本：`install.sh`
 - Agent 操作协议：`AGENTS.md`
 - 隐私与版权边界：`ACCESS_POLICY.md`
 - 知识分类决策树：`brain/RESOLVER.md`

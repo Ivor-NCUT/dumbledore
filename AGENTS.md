@@ -4,6 +4,8 @@
 
 ## 必须遵守的流程
 
+如果用户想安装、复制、fork、初始化自己的 Dumbledore 知识库，优先使用 `skills/dumbledore-onboarding/SKILL.md`。
+
 当用户发送任何知识性材料时，Agent 必须按下面流程工作：
 
 1. 读取并理解材料。

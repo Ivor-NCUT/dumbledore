@@ -1,6 +1,6 @@
 # Scripts
 
-这里未来放确定性自动化脚本。
+这里放确定性自动化脚本。
 
 适合写成 script 的任务：
 
@@ -12,3 +12,14 @@
 
 判断原则：如果任务输入输出稳定、步骤固定、不需要 Agent 主观判断，就优先写成 script，而不是 skill。
 
+## 当前脚本
+
+### `install.sh`
+
+仓库根目录的 `install.sh` 是 Dumbledore 的一行命令安装入口。
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.sh | bash
+```
+
+它会创建用户自己的 Dumbledore 知识库仓库，并尽量引导用户推送到自己的 GitHub，而不是写入上游仓库。

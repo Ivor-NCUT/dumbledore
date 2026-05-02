@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_REPO="Ivor-NCUT/dumbledore"
+SOURCE_ARCHIVE="https://github.com/${SOURCE_REPO}/archive/refs/heads/main.tar.gz"
+
+has_tty() {
+  [ -r /dev/tty ] && [ -w /dev/tty ]
+}
+
+prompt() {
+  local label="$1"
+  local default_value="$2"
+  local answer=""
+
+  if has_tty; then
+    printf "%s [%s]: " "$label" "$default_value"
+    read -r answer </dev/tty || true
+  fi
+
+  if [ -z "$answer" ]; then
+    printf "%s" "$default_value"
+  else
+    printf "%s" "$answer"
+  fi
+}
+
+require_command() {
+  local command_name="$1"
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    echo "Missing required command: ${command_name}" >&2
+    exit 1
+  fi
+}
+
+require_command curl
+require_command tar
+require_command git
+
+echo "Dumbledore onboarding"
+echo "This creates your own knowledge repo. It will not push materials to ${SOURCE_REPO}."
+echo
+
+DEFAULT_DIR="${DUMBLEDORE_DIR:-$HOME/dumbledore-knowledge}"
+TARGET_DIR="$(prompt "Local folder" "$DEFAULT_DIR")"
+TARGET_DIR="${TARGET_DIR/#\~/$HOME}"
+
+if [ -e "$TARGET_DIR" ] && [ "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null | wc -l | tr -d ' ')" != "0" ]; then
+  echo "Target folder exists and is not empty: ${TARGET_DIR}" >&2
+  exit 1
+fi
+
+mkdir -p "$TARGET_DIR"
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+echo "Downloading Dumbledore..."
+curl -fsSL "$SOURCE_ARCHIVE" | tar -xz -C "$TMP_DIR" --strip-components=1
+
+echo "Preparing your copy..."
+cp -R "$TMP_DIR"/. "$TARGET_DIR"/
+
+cd "$TARGET_DIR"
+git init >/dev/null
+git branch -M main
+git add -A
+
+if ! git config user.name >/dev/null; then
+  git config user.name "Dumbledore User"
+fi
+
+if ! git config user.email >/dev/null; then
+  git config user.email "dumbledore@example.local"
+fi
+
+git commit -m "chore: initialize Dumbledore knowledge repo" >/dev/null
+
+echo
+echo "Local Dumbledore repo created at: $(pwd)"
+
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+  DEFAULT_REPO="${DUMBLEDORE_REPO_NAME:-$(basename "$TARGET_DIR")}"
+  DEFAULT_VISIBILITY="${DUMBLEDORE_VISIBILITY:-private}"
+  CREATE_REMOTE="${DUMBLEDORE_CREATE_GITHUB:-}"
+
+  if has_tty && [ -z "$CREATE_REMOTE" ]; then
+    printf "Create and push to your GitHub with gh? [Y/n]: "
+    read -r CREATE_REMOTE </dev/tty || true
+  fi
+
+  case "${CREATE_REMOTE:-Y}" in
+    n|N|no|NO)
+      echo "Skipped GitHub creation."
+      ;;
+    *)
+      REPO_NAME="$(prompt "GitHub repo name" "$DEFAULT_REPO")"
+      VISIBILITY="$(prompt "Visibility: private or public" "$DEFAULT_VISIBILITY")"
+
+      case "$VISIBILITY" in
+        public) VISIBILITY_FLAG="--public" ;;
+        *) VISIBILITY_FLAG="--private" ;;
+      esac
+
+      echo "Creating GitHub repo..."
+      gh repo create "$REPO_NAME" "$VISIBILITY_FLAG" --source=. --remote=origin --push
+      echo "GitHub repo is ready: $(gh repo view "$REPO_NAME" --json url -q .url)"
+      ;;
+  esac
+else
+  echo "GitHub CLI is not authenticated or not installed."
+  echo "To push manually:"
+  echo "  cd \"$(pwd)\""
+  echo "  gh auth login"
+  echo "  gh repo create $(basename "$TARGET_DIR") --private --source=. --remote=origin --push"
+fi
+
+echo
+echo "Next: open this repo in your Agent and say: 用 dumbledore 处理这份材料。"
