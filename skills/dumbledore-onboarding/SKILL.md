@@ -13,12 +13,27 @@ description: |
 - 用户的数据应该进入用户自己的 GitHub 仓库。
 - 上游仓库只作为框架模板和更新来源。
 - 用户自己的 GitHub 仓库绑定为当前知识库的 `origin` remote。
+- 首次使用 Dumbledore 时，如果仓库还没完成初始化，必须先走 onboarding，再处理知识性材料。
+- onboarding 完成状态必须写入 `.dumbledore/state.json`，不能只靠环境猜测。
 - 完成绑定后，Dumbledore 在用户确认写入时会自动提交并推送最终产物。
 - 优先使用一行命令完成安装；如果用户的 Agent 能操作终端，你可以直接帮用户运行。
 - 如果用户没有 GitHub CLI 或未登录，给出最短的手动补救路径。
 - 不要在上游仓库中录入用户的知识材料。
+- 仓库根目录必须有 `raw/`，用于保存用户发送材料的 Markdown 原文。
 
 ## 推荐一行命令
+
+### 安装 Dumbledore skill
+
+如果用户还没有安装 Dumbledore skill，优先给出：
+
+```bash
+npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore
+```
+
+这条命令只安装 Agent Skill，不创建知识库。
+
+### 初始化 Dumbledore 知识库
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.sh | bash
@@ -28,7 +43,7 @@ curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.s
 
 1. 下载 Dumbledore 模板。
 2. 在本地创建用户自己的知识库目录。
-3. 初始化 Git 仓库。
+3. 初始化 Git 仓库并写入 `.dumbledore/state.json`。
 4. 如果 `gh` 已登录，引导用户创建并推送到自己的 GitHub 仓库，并把它绑定为 `origin`。
 
 ## Agent 一句话安装
@@ -61,6 +76,8 @@ curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.s
 
 如果缺少 `gh` 或未登录，仍可创建本地仓库，并告诉用户之后如何推送。
 
+此时也要把仓库标记为 `publish_mode=local_only`，表示 onboarding 已完成，但当前只支持本地使用。
+
 ### Step 3：运行安装
 
 优先运行：
@@ -91,8 +108,12 @@ cd ~/dumbledore-knowledge
 
 完成后检查：
 
+- `.dumbledore/state.json` 存在且可解析。
+- `onboarding_completed` 为 `true`。
+- `publish_mode` 为 `local_only` 或 `github_bound`。
 - 当前仓库 remote 是否指向用户自己的 GitHub 仓库。
 - `origin` 不应指向 `https://github.com/Ivor-NCUT/dumbledore.git`，除非用户明确是在维护上游框架。
+- 根目录 `raw/` 存在。
 - `skills/dumbledore/SKILL.md` 存在。
 - `AGENTS.md` 存在。
 - `scripts/publish.sh` 存在且可执行。
@@ -104,6 +125,10 @@ cd ~/dumbledore-knowledge
 > 以后你确认写入后，Dumbledore 会把分析出的知识、SOP、脚本建议和 skill 建议写入本地文件，然后自动提交并推送到这个绑定的 GitHub 仓库。
 
 如果用户不想自动推送，必须在任务开始前明确说“只写本地，不推送”。
+
+如果当前是 `local_only` 模式，要改成：
+
+> 你已经完成本地 onboarding，可以开始处理材料；等你以后绑定自己的 GitHub 仓库，再开启自动推送。
 
 ## 常见情况
 

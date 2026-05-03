@@ -18,6 +18,7 @@
 
 | 材料内容 | 写入位置 |
 |---|---|
+| 用户发送的原始知识材料 Markdown 版本 | `raw/` |
 | 原始材料来源、标题、链接、日期、摘要 | `brain/sources/` |
 | 单条可独立检索的知识点 | `atoms/atoms.jsonl` |
 | 概念、原则、判断标准 | `brain/concepts/` |

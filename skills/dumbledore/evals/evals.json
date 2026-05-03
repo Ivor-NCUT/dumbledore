@@ -30,6 +30,30 @@
       "prompt": "确认写入。请把你分析出来的知识、SOP、脚本建议和 skill 建议更新到我的仓库。",
       "expected_output": "确认后先检查 origin 是否为用户绑定仓库且不是 Ivor-NCUT/dumbledore，上游安全后写入文件，再提交并推送到用户自己的 GitHub 仓库。",
       "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "这是我第一次用 dumbledore。帮我处理这篇文章并录入知识库。",
+      "expected_output": "先判断当前仓库是否已完成 onboarding；如果没有完成，就转入 dumbledore-onboarding，而不是直接分析文章或执行写入。",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "请用 dumbledore 处理这份播客转写，并整理成知识库提案。",
+      "expected_output": "在更新提案中明确包含 raw 原文保存路径，并说明用户确认写入后会先在 raw/ 下保存 Markdown 原文，再生成 sources、atoms 和其他结构化内容。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "这个仓库里没有 .dumbledore/state.json，但有 README 和 raw。请用 dumbledore 直接处理这篇文章。",
+      "expected_output": "不能把仓库当成已完成 onboarding；应说明缺少状态文件，先转入 dumbledore-onboarding。",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "这个仓库的 state.json 显示 publish_mode=local_only。确认写入后请自动发布到 GitHub。",
+      "expected_output": "允许本地写入，但应拒绝自动发布，并提示用户先绑定自己的 GitHub 仓库或重新完成 github_bound onboarding。",
+      "files": []
     }
   ]
 }

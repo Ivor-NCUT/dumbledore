@@ -16,8 +16,27 @@ captured_at: YYYY-MM-DD
 privacy: public | internal | private | restricted
 status: proposed | accepted | archived
 tags: []
+raw_source_path:
 ---
 ```
+
+## Raw Material
+
+每份用户发送给 Agent 的知识性材料，在用户确认写入后，都应该优先在 `raw/` 下保留一份 Markdown 原文。
+
+推荐命名：
+
+```text
+raw/YYYYMMDD_slug.md
+```
+
+要求：
+
+- 尽量保留原始结构和段落顺序。
+- 可以补充来源链接、抓取时间和必要说明。
+- 如果原始内容不是 Markdown，先转换为 Markdown 再保存。
+- 如果材料含高敏信息，先按 `ACCESS_POLICY.md` 做脱敏，再决定是否保留全文。
+- `brain/sources/` 页面应该回链到对应的 `raw/` 文件。
 
 正文结构：
 

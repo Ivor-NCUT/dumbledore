@@ -16,6 +16,10 @@
 
 ## 建议写入内容
 
+### Raw 原文
+
+- `raw/`
+
 ### 知识原子
 
 ```json
@@ -24,6 +28,7 @@
 
 ### 知识页
 
+- `raw/`
 - `brain/sources/`
 - `brain/concepts/`
 - `brain/methods/`

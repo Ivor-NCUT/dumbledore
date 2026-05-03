@@ -37,6 +37,27 @@ require_command curl
 require_command tar
 require_command git
 
+write_state() {
+  local publish_mode="$1"
+  local origin_url="$2"
+  local state_dir=".dumbledore"
+  local state_file="${state_dir}/state.json"
+  local completed_at
+
+  completed_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  mkdir -p "$state_dir"
+  cat >"$state_file" <<EOF
+{
+  "version": 1,
+  "onboarding_completed": true,
+  "completed_at": "${completed_at}",
+  "publish_mode": "${publish_mode}",
+  "origin_url": ${origin_url},
+  "raw_enabled": true
+}
+EOF
+}
+
 echo "Dumbledore onboarding"
 echo "This creates your own knowledge repo. It will not push materials to ${SOURCE_REPO}."
 echo
@@ -63,6 +84,7 @@ cp -R "$TMP_DIR"/. "$TARGET_DIR"/
 cd "$TARGET_DIR"
 git init >/dev/null
 git branch -M main
+write_state "local_only" "null"
 git add -A
 
 if ! git config user.name >/dev/null; then
@@ -102,7 +124,12 @@ if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
       esac
 
       echo "Creating GitHub repo..."
-      gh repo create "$REPO_NAME" "$VISIBILITY_FLAG" --source=. --remote=origin --push
+      gh repo create "$REPO_NAME" "$VISIBILITY_FLAG" --source=. --remote=origin
+      REMOTE_URL="$(git remote get-url origin)"
+      write_state "github_bound" "\"${REMOTE_URL}\""
+      git add .dumbledore/state.json
+      git commit -m "chore: bind Dumbledore GitHub origin" >/dev/null
+      git push -u origin main >/dev/null
       echo "GitHub repo is ready: $(gh repo view "$REPO_NAME" --json url -q .url)"
       ;;
   esac

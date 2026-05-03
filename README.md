@@ -25,6 +25,8 @@
 Dumbledore 的设计目标是反过来：
 
 - **GitHub 是真源**：所有长期知识、方法论、skill 建议和变更记录都进入仓库。
+- **原文先落 raw**：每份发送给 Agent 的知识性材料，都先保留一份 Markdown 原文。
+- **首次使用看状态文件**：是否完成 onboarding，由 `.dumbledore/state.json` 判断，而不是靠猜。
 - **Agent 先提案再发布**：任何材料录入前，Agent 必须先给你一份更新提案，等你确认后再写入文件、提交并推送到你自己的 GitHub 仓库。
 - **知识会长出能力**：材料里的痛点、方法论和 SOP 会被识别出来，成为未来 Agent Skill 的候选。
 - **人类可读，Agent 可执行**：Markdown 给人读，JSONL 给机器检索，Skill 给 Agent 执行。
@@ -45,7 +47,21 @@ Dumbledore 的设计目标是反过来：
 
 ## 快速开始
 
-### 一行命令安装
+### 一行命令安装 Skill
+
+如果你只是想把 Dumbledore 安装到当前 Agent 环境中：
+
+```bash
+npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore
+```
+
+这条命令会安装主入口 skill：
+
+- `dumbledore`：处理知识材料、判断首次 onboarding、引导私人知识库初始化
+
+安装 skill 之后，第一次使用 Dumbledore 时，它应该先引导你完成 onboarding，创建你自己的知识库仓库。
+
+### 一行命令初始化知识库
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.sh | bash
@@ -81,6 +97,10 @@ Agent 应该先读取：
 4. `brain/RESOLVER.md`
 5. `brain/schema.md`
 6. `skills/dumbledore/SKILL.md`
+
+如果这是第一次使用 Dumbledore，或当前仓库还没有完成 onboarding，Agent 不应直接处理材料，而应先切换到 `skills/dumbledore-onboarding/SKILL.md`，帮助你完成私人仓库初始化和绑定。
+
+这里的“第一次使用”以 `.dumbledore/state.json` 是否存在且有效为准，而不是看仓库是不是空的。
 
 然后输出“更新提案”。只有当你明确说：
 
@@ -119,11 +139,15 @@ Agent 应该先读取：
     ↓
 Dumbledore 阅读并理解
     ↓
+规划 raw/ 原文路径
+    ↓
 判断：知识库 / SOP / 痛点 / skill 建议 / script 建议 / 不入库
     ↓
 输出更新提案
     ↓
 你确认
+    ↓
+保存 Markdown 原文到 raw/
     ↓
 写入 GitHub 仓库
     ↓
@@ -139,6 +163,8 @@ Dumbledore 阅读并理解
 ├── AGENTS.md                    # 所有 Agent 的仓库操作协议
 ├── ACCESS_POLICY.md             # 隐私、版权、写入与发布边界
 ├── USER.md                      # 用户长期偏好、判断标准和项目背景
+├── .dumbledore/                 # onboarding 状态与本仓库元信息
+├── raw/                         # 用户发送材料的 Markdown 原文
 ├── brain/
 │   ├── RESOLVER.md              # 新材料应该放在哪里的决策树
 │   ├── schema.md                # 知识页面和知识原子的格式规范
@@ -207,6 +233,8 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - 知识分类决策树：`brain/RESOLVER.md`
 - 知识原子 schema：`brain/schema.md`
 - 知识原子库：`atoms/atoms.jsonl`
+- 原始材料目录：`raw/`
+- onboarding 状态目录：`.dumbledore/`
 - 写入提案、来源页、知识页、skill 建议模板
 
 ## 适合谁

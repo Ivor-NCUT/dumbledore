@@ -9,11 +9,16 @@ captured_at:
 privacy:
 status: accepted
 tags: []
+raw_source_path:
 ---
 
 # 标题
 
 ## 一句话摘要
+
+## Raw 原文
+
+- `raw/...`
 
 ## 为什么值得记录
 
@@ -26,4 +31,3 @@ tags: []
 ## Agent Skill 建议
 
 ## 关联页面
-

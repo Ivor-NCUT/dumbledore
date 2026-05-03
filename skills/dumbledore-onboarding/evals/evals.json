@@ -18,6 +18,36 @@
       "prompt": "我没有 gh，但想先在本地试用 Dumbledore。",
       "expected_output": "允许只创建本地仓库，解释缺少 gh 时的手动推送路径。",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "这是我第一次用 Dumbledore，但我已经发来了一篇文章。你先帮我处理内容吧。",
+      "expected_output": "说明首次使用要先完成 onboarding，再处理知识材料；优先引导创建用户自己的仓库，而不是直接执行知识任务。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "帮我初始化 Dumbledore 仓库，我希望之后每份材料都能保留 Markdown 原文。",
+      "expected_output": "在 onboarding 说明里明确提到根目录需要有 raw/，用于保存用户发送材料的 Markdown 原文。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "我想先本地用，不连 GitHub，但希望 Agent 下次不要再把我当成第一次使用。",
+      "expected_output": "说明 onboarding 完成后会写入 .dumbledore/state.json，并把 publish_mode 设为 local_only，这样后续不会再被当成首次使用。",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "我已经绑定了自己的 GitHub 仓库，怎么让 Dumbledore 知道 onboarding 已经完整完成？",
+      "expected_output": "说明 .dumbledore/state.json 应记录 onboarding_completed=true、publish_mode=github_bound 和当前 origin_url，并以此作为后续判断依据。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "我希望 Dumbledore skill 可以像 npx skills add https://github.com/op7418/guizang-ppt-skill --skill guizang-ppt-skill 这样一行命令安装。",
+      "expected_output": "给出 npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore，并说明这只安装主入口 skill，初始化知识库仍需运行 onboarding/install.sh。",
+      "files": []
     }
   ]
 }

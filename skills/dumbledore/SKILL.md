@@ -10,6 +10,7 @@ description: |
 
 ## 核心原则
 
+- 第一次使用 Dumbledore 时，若当前仓库尚未完成 onboarding，必须先触发 `dumbledore-onboarding`，不能直接处理用户任务。
 - 先理解，再分类，再提案，再写入。
 - 用户确认前，不修改仓库。
 - 用户确认后，最终产物要自动提交并推送到用户自己绑定的 GitHub 仓库。
@@ -17,6 +18,7 @@ description: |
 - 不要把所有东西都写成 skill。知识、script、SOP、skill 要分清。
 - 录入时保留来源、日期、隐私级别和可追溯关系。
 - 不得把用户知识材料推送到上游模板仓库 `Ivor-NCUT/dumbledore`。
+- 每次处理材料时，都要在 `raw/` 下保留一份 Markdown 原文。
 
 ## 启动条件
 
@@ -43,11 +45,49 @@ description: |
 
 如果用户材料和某个已有主题相关，再读取对应的 `brain/` 页面。
 
+## Step 0：先判断是否需要 onboarding
+
+在处理任何知识性材料前，先检查当前环境是否已经完成 onboarding。
+
+如果满足任一条件，就不要继续处理材料，而是切换到 `skills/dumbledore-onboarding/SKILL.md`：
+
+- 当前目录不是用户自己的 Dumbledore 知识库仓库。
+- 缺少 `.dumbledore/state.json`。
+- `.dumbledore/state.json` 不是合法 JSON。
+- `.dumbledore/state.json` 中 `onboarding_completed` 不为 `true`。
+- 根目录缺少 `raw/`，或状态文件中的 `raw_enabled` 不为 `true`。
+- `origin` 指向 `https://github.com/Ivor-NCUT/dumbledore.git` 或 `git@github.com:Ivor-NCUT/dumbledore.git`。
+- 状态文件中的 `publish_mode` 为 `github_bound`，但当前没有 `origin`。
+- 状态文件中的 `origin_url` 不为空，且与当前 `origin` 不一致。
+
+此时应该明确告诉用户：当前是第一次使用或仓库尚未初始化完成，需要先完成 onboarding，之后再处理知识材料。
+
+如果当前 Agent 环境没有安装 `dumbledore-onboarding`，不要卡住。直接执行内置 onboarding 引导：
+
+1. 告诉用户需要先创建自己的 Dumbledore 知识库仓库，不能把材料写到上游 `Ivor-NCUT/dumbledore`。
+2. 给出 skill 安装命令：
+   ```bash
+   npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore
+   ```
+3. 给出知识库初始化命令：
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.sh | bash
+   ```
+4. 引导用户进入新仓库后再重新发送材料。
+
+注意：
+
+- `publish_mode=local_only` 仍然视为 onboarding 已完成。
+- `local_only` 模式下可以处理材料并写入本地，但不能自动推送。
+- 只有 `publish_mode=github_bound` 且 `origin` 有效时，才进入自动发布流程。
+
 ## 工作流程
 
 ### Step 1：理解材料
 
-先完整阅读材料，识别：
+先完整阅读材料，并规划 `raw/` 下的 Markdown 原文保存路径。用户确认前不要写文件。
+
+识别：
 
 - 材料主题。
 - 作者想解决的问题。
@@ -87,6 +127,7 @@ description: |
 - 为什么值得记录：
 
 ### 2. 拟写入知识库的信息
+- Raw 原文：
 - 来源记录：
 - 知识原子：
 - 概念页：
@@ -154,20 +195,23 @@ description: |
 确认后按提案写入：
 
 0. 发布前先确认当前仓库绑定：
+   - 检查 `.dumbledore/state.json`。
    - 检查 `git remote get-url origin`。
+   - 如果 `publish_mode` 是 `local_only`，停止自动发布，并提示用户先绑定自己的 GitHub 仓库。
    - 如果没有 `origin`，先停止并引导用户运行 onboarding，把仓库绑定到自己的 GitHub。
    - 如果 `origin` 指向 `https://github.com/Ivor-NCUT/dumbledore.git` 或 `git@github.com:Ivor-NCUT/dumbledore.git`，停止。上游仓库只用于框架贡献，不保存用户知识。
-1. 在 `brain/sources/` 创建或更新来源记录。
-2. 在 `atoms/atoms.jsonl` 追加知识原子。
-3. 根据需要创建或更新：
+1. 在 `raw/` 保存材料的 Markdown 原文。
+2. 在 `brain/sources/` 创建或更新来源记录。
+3. 在 `atoms/atoms.jsonl` 追加知识原子。
+4. 根据需要创建或更新：
    - `brain/concepts/`
    - `brain/methods/`
    - `brain/problems/`
    - `brain/projects/`
-4. 在 `brain/skill-ideas/` 创建 skill 建议。
-5. 只有当用户明确要求实现 skill 时，才创建 `skills/{skill-name}/SKILL.md`。
-6. 只有当用户明确要求实现 script 时，才创建 `scripts/{script-name}`。
-7. 将最终产物发布到用户绑定的 GitHub 仓库：
+5. 在 `brain/skill-ideas/` 创建 skill 建议。
+6. 只有当用户明确要求实现 skill 时，才创建 `skills/{skill-name}/SKILL.md`。
+7. 只有当用户明确要求实现 script 时，才创建 `scripts/{script-name}`。
+8. 将最终产物发布到用户绑定的 GitHub 仓库：
    - 优先运行 `scripts/publish.sh "chore: update knowledge from confirmed intake"`。
    - 如果脚本不可用，手动执行 `git add -A`、`git commit -m "chore: update knowledge from confirmed intake"`、`git pull --rebase origin <branch>`、`git push -u origin <branch>`。
    - 如果 rebase 有冲突，停止并向用户说明冲突文件，不要强推。
