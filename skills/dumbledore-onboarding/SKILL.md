@@ -16,6 +16,7 @@ description: |
 - 首次使用 Dumbledore 时，如果仓库还没完成初始化，必须先走 onboarding，再处理知识性材料。
 - onboarding 完成状态必须写入 `.dumbledore/state.json`，不能只靠环境猜测。
 - 完成绑定后，Dumbledore 在用户确认写入时会自动提交并推送最终产物。
+- 安装时记录 Dumbledore 母仓库版本；后续使用过程中如上游更新，Agent 要提醒用户并在确认后帮助更新。
 - 优先使用一行命令完成安装；如果用户的 Agent 能操作终端，你可以直接帮用户运行。
 - 如果用户没有 GitHub CLI 或未登录，给出最短的手动补救路径。
 - 不要在上游仓库中录入用户的知识材料。
@@ -45,6 +46,7 @@ curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.s
 2. 在本地创建用户自己的知识库目录。
 3. 初始化 Git 仓库并写入 `.dumbledore/state.json`。
 4. 如果 `gh` 已登录，引导用户创建并推送到自己的 GitHub 仓库，并把它绑定为 `origin`。
+5. 记录上游仓库、分支和当前 commit，用于后续更新提醒。
 
 ## Agent 一句话安装
 
@@ -117,6 +119,9 @@ cd ~/dumbledore-knowledge
 - `skills/dumbledore/SKILL.md` 存在。
 - `AGENTS.md` 存在。
 - `scripts/publish.sh` 存在且可执行。
+- `scripts/check-updates.sh` 存在且可执行。
+- `scripts/update-framework.sh` 存在且可执行。
+- `.dumbledore/state.json` 中记录 `framework_upstream_repo`、`framework_upstream_branch` 和 `framework_upstream_commit`。
 
 ### Step 6：说明自动发布
 
@@ -129,6 +134,24 @@ cd ~/dumbledore-knowledge
 如果当前是 `local_only` 模式，要改成：
 
 > 你已经完成本地 onboarding，可以开始处理材料；等你以后绑定自己的 GitHub 仓库，再开启自动推送。
+
+### Step 7：说明框架更新
+
+告诉用户：
+
+> Dumbledore 会在使用时检查母仓库 `Ivor-NCUT/dumbledore` 是否更新。如果有更新，我会先提醒你；你确认后，我会运行更新脚本，把框架能力同步到你的知识库仓库，同时保留你的 `raw/`、`atoms/` 和知识材料。
+
+如果用户想手动检查，可运行：
+
+```bash
+scripts/check-updates.sh --force
+```
+
+如果用户确认更新，可运行：
+
+```bash
+scripts/update-framework.sh --yes
+```
 
 ## 常见情况
 

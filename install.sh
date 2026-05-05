@@ -3,6 +3,8 @@ set -euo pipefail
 
 SOURCE_REPO="Ivor-NCUT/dumbledore"
 SOURCE_ARCHIVE="https://github.com/${SOURCE_REPO}/archive/refs/heads/main.tar.gz"
+SOURCE_GIT_URL="https://github.com/${SOURCE_REPO}.git"
+SOURCE_BRANCH="main"
 
 has_tty() {
   [ -r /dev/tty ] && [ -w /dev/tty ]
@@ -40,20 +42,30 @@ require_command git
 write_state() {
   local publish_mode="$1"
   local origin_url="$2"
+  local upstream_commit="$3"
   local state_dir=".dumbledore"
   local state_file="${state_dir}/state.json"
   local completed_at
+  local upstream_commit_json="null"
 
   completed_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  if [ -n "$upstream_commit" ]; then
+    upstream_commit_json="\"${upstream_commit}\""
+  fi
+
   mkdir -p "$state_dir"
   cat >"$state_file" <<EOF
 {
-  "version": 1,
+  "version": 2,
   "onboarding_completed": true,
   "completed_at": "${completed_at}",
   "publish_mode": "${publish_mode}",
   "origin_url": ${origin_url},
-  "raw_enabled": true
+  "raw_enabled": true,
+  "framework_upstream_repo": "${SOURCE_REPO}",
+  "framework_upstream_branch": "${SOURCE_BRANCH}",
+  "framework_upstream_commit": ${upstream_commit_json},
+  "framework_last_update_check_at": null
 }
 EOF
 }
@@ -76,6 +88,7 @@ TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
 echo "Downloading Dumbledore..."
+SOURCE_COMMIT="$(git ls-remote "$SOURCE_GIT_URL" "refs/heads/${SOURCE_BRANCH}" 2>/dev/null | awk '{print $1}' | head -n 1 || true)"
 curl -fsSL "$SOURCE_ARCHIVE" | tar -xz -C "$TMP_DIR" --strip-components=1
 
 echo "Preparing your copy..."
@@ -84,7 +97,7 @@ cp -R "$TMP_DIR"/. "$TARGET_DIR"/
 cd "$TARGET_DIR"
 git init >/dev/null
 git branch -M main
-write_state "local_only" "null"
+write_state "local_only" "null" "$SOURCE_COMMIT"
 git add -A
 
 if ! git config user.name >/dev/null; then
@@ -126,7 +139,7 @@ if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
       echo "Creating GitHub repo..."
       gh repo create "$REPO_NAME" "$VISIBILITY_FLAG" --source=. --remote=origin
       REMOTE_URL="$(git remote get-url origin)"
-      write_state "github_bound" "\"${REMOTE_URL}\""
+      write_state "github_bound" "\"${REMOTE_URL}\"" "$SOURCE_COMMIT"
       git add .dumbledore/state.json
       git commit -m "chore: bind Dumbledore GitHub origin" >/dev/null
       git push -u origin main >/dev/null

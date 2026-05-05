@@ -48,6 +48,12 @@
       "prompt": "我希望 Dumbledore skill 可以像 npx skills add https://github.com/op7418/guizang-ppt-skill --skill guizang-ppt-skill 这样一行命令安装。",
       "expected_output": "给出 npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore，并说明这只安装主入口 skill，初始化知识库仍需运行 onboarding/install.sh。",
       "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "我希望以后 Dumbledore 母仓库更新时，我自己的 skill 能收到更新提醒并顺手升级。",
+      "expected_output": "说明 onboarding 会记录母仓库、分支和 commit；后续使用时通过 scripts/check-updates.sh 检查，用户确认后通过 scripts/update-framework.sh --yes 更新，并保护 raw、atoms 和个人知识材料。",
+      "files": []
     }
   ]
 }

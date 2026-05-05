@@ -17,6 +17,7 @@ npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore dumble
 - 批量检查失效链接。
 - 把会议记录拆成结构化段落。
 - 批量生成候选 tags。
+- 检查 Dumbledore 母仓库是否有新版本，并在用户确认后更新框架文件。
 
 判断原则：如果任务输入输出稳定、步骤固定、不需要 Agent 主观判断，就优先写成 script，而不是 skill。
 
@@ -67,4 +68,31 @@ uv tool install wechat-article-to-markdown
 pipx install wechat-article-to-markdown
 ```
 
-它还会检查 `.dumbledore/state.json`，只有在 `publish_mode=github_bound` 时才允许自动发布。
+Dumbledore 的发布流程会检查 `.dumbledore/state.json`，只有在 `publish_mode=github_bound` 时才允许自动发布。
+
+### `check-updates.sh`
+
+使用 Dumbledore 时，Agent 可以先运行它来检查母仓库 `Ivor-NCUT/dumbledore` 是否有新版本。
+
+```bash
+scripts/check-updates.sh
+scripts/check-updates.sh --force
+```
+
+它只负责提醒，不会修改知识库。检查结果会缓存到 `.dumbledore/update-check.json`，默认一天内不重复访问 GitHub。
+
+### `update-framework.sh`
+
+当用户确认更新后，Agent 用它把上游框架文件同步到用户自己的知识库仓库。
+
+```bash
+scripts/update-framework.sh --yes
+```
+
+它会先创建备份，再更新框架拥有的文件，例如 `skills/`、`scripts/`、`templates/`、`brain/schema.md` 和 `brain/RESOLVER.md`。它不会覆盖 `raw/`、`atoms/` 或用户自己的知识材料。
+
+更新完成后，如果当前仓库已绑定用户自己的 GitHub，Agent 再运行：
+
+```bash
+scripts/publish.sh "chore: update Dumbledore framework"
+```

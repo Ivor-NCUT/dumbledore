@@ -28,6 +28,7 @@
 | 项目背景、项目决策、项目上下文 | `brain/projects/` |
 | 可构建 Agent Skill 的想法 | `brain/skill-ideas/` |
 | 重复、确定性、输入输出明确的任务 | `scripts/` |
+| Dumbledore 母仓库更新机制 | `brain/methods/` + `scripts/` |
 
 ## 第三步：判断是否建议 skill
 

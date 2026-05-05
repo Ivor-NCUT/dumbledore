@@ -5,6 +5,8 @@
 关键文件：
 
 - `state.json`：由 onboarding 写入的状态文件
+- `update-check.json`：最近一次母仓库更新检查结果
+- `backups/`：框架更新前自动创建的备份
 - `state.example.json`：状态文件示例
 
 Agent 判断“是否首次使用”时，不应猜测，而应检查 `state.json` 是否存在且有效。
@@ -17,6 +19,10 @@ Agent 判断“是否首次使用”时，不应猜测，而应检查 `state.jso
 - `publish_mode`
 - `origin_url`
 - `raw_enabled`
+- `framework_upstream_repo`
+- `framework_upstream_branch`
+- `framework_upstream_commit`
+- `framework_last_update_check_at`
 
 `publish_mode` 取值：
 

@@ -60,6 +60,18 @@
       "prompt": "处理这篇微信公众号文章：https://mp.weixin.qq.com/s/f-TA9pmFxqZeVevMnvMvew",
       "expected_output": "先完成 onboarding 检查；若可继续，在提案中说明需要用 scripts/fetch-wechat-article.sh 或 wechat-article-to-markdown 转为 Markdown，确认后保存到 raw/，抓取失败时不能编造正文。",
       "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "用 dumbledore 处理这份文章。另外，如果母仓库有更新，先提醒我。",
+      "expected_output": "在处理材料前先运行或要求运行 scripts/check-updates.sh；如果发现上游更新，先提示用户确认，再运行 scripts/update-framework.sh --yes，不能未经确认直接更新。",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "Dumbledore 提醒我上游有更新，我确认更新，然后继续处理材料。",
+      "expected_output": "确认后运行 scripts/update-framework.sh --yes，说明会保留 raw、atoms 和用户知识材料；更新后如已绑定 GitHub，则用 scripts/publish.sh 提交并推送框架更新。",
+      "files": []
     }
   ]
 }

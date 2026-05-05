@@ -14,6 +14,7 @@ description: |
 - 先理解，再分类，再提案，再写入。
 - 用户确认前，不修改仓库。
 - 用户确认后，最终产物要自动提交并推送到用户自己绑定的 GitHub 仓库。
+- 如果上游框架仓库 `Ivor-NCUT/dumbledore` 有更新，先提醒用户，并在用户确认后帮助完成框架更新。
 - 每次处理材料，都要判断它是否应该进入知识库、是否能沉淀方法论、是否暴露痛点、是否值得做成 Agent Skill。
 - 不要把所有东西都写成 skill。知识、script、SOP、skill 要分清。
 - 录入时保留来源、日期、隐私级别和可追溯关系。
@@ -49,6 +50,46 @@ description: |
 
 如果用户材料和某个已有主题相关，再读取对应的 `brain/` 页面。
 
+## Step -1：检查 Dumbledore 框架更新
+
+在处理知识材料前，先轻量检查 Dumbledore 上游框架是否有新版本。
+
+优先运行：
+
+```bash
+scripts/check-updates.sh
+```
+
+行为要求：
+
+- 如果脚本输出“up to date”，继续正常处理材料。
+- 如果脚本输出“update available”或“upstream version is unknown”，先告诉用户：Dumbledore 母仓库有更新，建议先更新框架能力。
+- 不要在用户确认前执行更新。
+- 如果用户确认更新，运行：
+  ```bash
+  scripts/update-framework.sh --yes
+  ```
+- 更新完成后，检查变更，再运行：
+  ```bash
+  scripts/publish.sh "chore: update Dumbledore framework"
+  ```
+  将更新后的框架文件推送到用户自己的 GitHub 仓库。
+- 如果当前是 `local_only`，可以更新本地框架文件，但不要自动推送。
+- 如果检查失败、离线或 GitHub 不可达，不要阻塞用户任务；说明“暂时无法检查更新”，继续执行材料处理。
+- 更新脚本只应更新框架拥有的文件，不应覆盖 `raw/`、`atoms/` 或用户自己的知识材料。
+
+如果当前仓库没有 `scripts/check-updates.sh`，说明用户版本较旧。此时提醒用户可运行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Ivor-NCUT/dumbledore/main/install.sh | bash
+```
+
+或重新安装 skill：
+
+```bash
+npx skills add https://github.com/Ivor-NCUT/dumbledore --skill dumbledore
+```
+
 ## Step 0：先判断是否需要 onboarding
 
 在处理任何知识性材料前，先检查当前环境是否已经完成 onboarding。
@@ -63,6 +104,7 @@ description: |
 - `origin` 指向 `https://github.com/Ivor-NCUT/dumbledore.git` 或 `git@github.com:Ivor-NCUT/dumbledore.git`。
 - 状态文件中的 `publish_mode` 为 `github_bound`，但当前没有 `origin`。
 - 状态文件中的 `origin_url` 不为空，且与当前 `origin` 不一致。
+- 状态文件缺少 `framework_upstream_repo` 或 `framework_upstream_commit` 时，不应视为 onboarding 失败；这只表示旧版状态文件，需要通过 `scripts/check-updates.sh` 或 `scripts/update-framework.sh` 补齐。
 
 此时应该明确告诉用户：当前是第一次使用或仓库尚未初始化完成，需要先完成 onboarding，之后再处理知识材料。
 
@@ -200,7 +242,12 @@ description: |
 - 当前分支：
 - 是否会自动提交并推送：
 
-### 8. 需要你确认的问题
+### 8. 框架更新状态
+- 是否检查到 Dumbledore 上游更新：
+- 是否建议先更新框架：
+- 更新命令：
+
+### 9. 需要你确认的问题
 - 如果没有问题，等待用户说“确认写入”。
 ```
 
@@ -231,6 +278,7 @@ description: |
    - 如果 `publish_mode` 是 `local_only`，停止自动发布，并提示用户先绑定自己的 GitHub 仓库。
    - 如果没有 `origin`，先停止并引导用户运行 onboarding，把仓库绑定到自己的 GitHub。
    - 如果 `origin` 指向 `https://github.com/Ivor-NCUT/dumbledore.git` 或 `git@github.com:Ivor-NCUT/dumbledore.git`，停止。上游仓库只用于框架贡献，不保存用户知识。
+   - 如果刚完成框架更新，先确认 `raw/`、`atoms/` 和用户知识页没有被覆盖。
 1. 在 `raw/` 保存材料的 Markdown 原文；如果材料是微信公众号链接，使用 `scripts/fetch-wechat-article.sh` 转换。
 2. 在 `brain/sources/` 创建或更新来源记录。
 3. 在 `atoms/atoms.jsonl` 追加知识原子。

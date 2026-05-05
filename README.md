@@ -28,6 +28,7 @@ Dumbledore 的设计目标是反过来：
 - **原文先落 raw**：每份发送给 Agent 的知识性材料，都先保留一份 Markdown 原文。
 - **首次使用看状态文件**：是否完成 onboarding，由 `.dumbledore/state.json` 判断，而不是靠猜。
 - **Agent 先提案再发布**：任何材料录入前，Agent 必须先给你一份更新提案，等你确认后再写入文件、提交并推送到你自己的 GitHub 仓库。
+- **母仓库更新会提醒**：如果 `Ivor-NCUT/dumbledore` 发布了新版本，Agent 会在使用时提醒你，并在你确认后丝滑更新到你的私有知识库。
 - **知识会长出能力**：材料里的痛点、方法论和 SOP 会被识别出来，成为未来 Agent Skill 的候选。
 - **人类可读，Agent 可执行**：Markdown 给人读，JSONL 给机器检索，Skill 给 Agent 执行。
 
@@ -119,6 +120,24 @@ Agent 应该先读取：
 
 确认写入后，Dumbledore 会自动运行发布流程，把智能分析出的知识、SOP、脚本建议、skill 建议等最终产物提交并推送到当前绑定的 `origin` 仓库。
 
+### 更新 Dumbledore 框架
+
+你的私人知识库不会自动被母仓库强行覆盖。Dumbledore 使用时会检查上游版本，如果有更新，会先提醒你。
+
+你也可以手动检查：
+
+```bash
+scripts/check-updates.sh --force
+```
+
+确认要更新后运行：
+
+```bash
+scripts/update-framework.sh --yes
+```
+
+更新脚本会保留你的 `raw/`、`atoms/` 和个人知识材料，只同步框架拥有的 skill、script、template 和 schema。更新后，Agent 会把这次框架升级提交并推送到你自己的 GitHub 仓库。
+
 ## 重要边界
 
 `Ivor-NCUT/dumbledore` 是框架上游仓库，不是用户的私人知识库。
@@ -139,6 +158,8 @@ Agent 应该先读取：
 你发送材料
     ↓
 Dumbledore 阅读并理解
+    ↓
+检查母仓库是否有框架更新
     ↓
 规划 raw/ 原文路径
     ↓
