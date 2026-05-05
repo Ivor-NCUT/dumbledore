@@ -42,6 +42,7 @@ Dumbledore 的设计目标是反过来：
 - 它建议我们未来构建什么 Agent Skill？
 - 有没有确定性任务更适合写成 script？
 - 如果要更新仓库，会改哪些文件？
+- 如果是微信公众号文章，是否需要先转换成 Markdown？
 
 然后它会停下来，等你确认。确认后，它会把最终产物更新到你自己绑定的 GitHub 仓库。
 
@@ -209,6 +210,7 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - 会提出哪些 skill 建议。
 - 如果目标是 OpenClaw，会补充 OpenClaw 类型、目录结构、frontmatter、`references/`、`data/`、测试和公开版审计。
 - 会提交并推送到哪个用户绑定仓库。
+- 如果材料来自微信公众号，会调用 `scripts/fetch-wechat-article.sh` 先生成 `raw/` Markdown。
 - 有什么隐私或版权风险。
 
 ### 3. Skill 是方法论的软件化
@@ -227,6 +229,7 @@ Dumbledore 默认不直接改仓库。它会先告诉你：
 - Onboarding Agent Skill：`skills/dumbledore-onboarding/SKILL.md`
 - 一行命令安装脚本：`install.sh`
 - 自动发布脚本：`scripts/publish.sh`
+- 微信文章转 Markdown 脚本：`scripts/fetch-wechat-article.sh`
 - OpenClaw skill 创建适配：`brain/methods/openclaw-skill-creation.md`
 - Agent 操作协议：`AGENTS.md`
 - 隐私与版权边界：`ACCESS_POLICY.md`

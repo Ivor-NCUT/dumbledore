@@ -20,6 +20,10 @@ raw_source_path:
 
 - `raw/...`
 
+## 外部转换工具
+
+- 微信公众号文章：`scripts/fetch-wechat-article.sh`
+
 ## 为什么值得记录
 
 ## 关键知识

@@ -43,6 +43,10 @@ description: |
 6. `brain/methods/openclaw-skill-creation.md`
 7. `templates/openclaw-skill-package.md`
 
+如果材料包含微信公众号文章链接，例如 `mp.weixin.qq.com`，再读取：
+
+8. `brain/methods/wechat-article-ingestion.md`
+
 如果用户材料和某个已有主题相关，再读取对应的 `brain/` 页面。
 
 ## Step 0：先判断是否需要 onboarding
@@ -80,6 +84,28 @@ description: |
 - `publish_mode=local_only` 仍然视为 onboarding 已完成。
 - `local_only` 模式下可以处理材料并写入本地，但不能自动推送。
 - 只有 `publish_mode=github_bound` 且 `origin` 有效时，才进入自动发布流程。
+
+## 微信公众号文章处理
+
+当用户发送 `mp.weixin.qq.com` 链接时：
+
+1. 不要声称可以直接读取正文。
+2. 先完成 Step 0 onboarding 检查。
+3. 在更新提案中列出将保存到 `raw/` 的 Markdown 路径。
+4. 用户确认写入后，优先运行：
+   ```bash
+   scripts/fetch-wechat-article.sh "<mp.weixin.qq.com URL>"
+   ```
+5. 如果脚本提示缺少转换器，引导用户安装：
+   ```bash
+   uv tool install wechat-article-to-markdown
+   ```
+   或：
+   ```bash
+   pipx install wechat-article-to-markdown
+   ```
+6. 如果抓取失败、触发验证码或没有生成 Markdown，不要编造内容。请用户提供可访问链接、复制全文或 Markdown。
+7. 成功生成 raw Markdown 后，再继续知识分析、SOP、script 和 skill 建议。
 
 ## 工作流程
 
@@ -161,15 +187,20 @@ description: |
 - 输出：
 - 为什么不做成 skill：
 
-### 5. 预计修改文件
+### 5. 外部转换工具
+- 是否使用微信公众号转 Markdown：
+- 命令：
+- 生成的 raw 文件：
+
+### 6. 预计修改文件
 - `path/to/file`
 
-### 6. 发布目标
+### 7. 发布目标
 - 当前绑定 GitHub 仓库：
 - 当前分支：
 - 是否会自动提交并推送：
 
-### 7. 需要你确认的问题
+### 8. 需要你确认的问题
 - 如果没有问题，等待用户说“确认写入”。
 ```
 
@@ -200,7 +231,7 @@ description: |
    - 如果 `publish_mode` 是 `local_only`，停止自动发布，并提示用户先绑定自己的 GitHub 仓库。
    - 如果没有 `origin`，先停止并引导用户运行 onboarding，把仓库绑定到自己的 GitHub。
    - 如果 `origin` 指向 `https://github.com/Ivor-NCUT/dumbledore.git` 或 `git@github.com:Ivor-NCUT/dumbledore.git`，停止。上游仓库只用于框架贡献，不保存用户知识。
-1. 在 `raw/` 保存材料的 Markdown 原文。
+1. 在 `raw/` 保存材料的 Markdown 原文；如果材料是微信公众号链接，使用 `scripts/fetch-wechat-article.sh` 转换。
 2. 在 `brain/sources/` 创建或更新来源记录。
 3. 在 `atoms/atoms.jsonl` 追加知识原子。
 4. 根据需要创建或更新：

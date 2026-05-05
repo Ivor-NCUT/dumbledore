@@ -54,6 +54,12 @@
       "prompt": "这个仓库的 state.json 显示 publish_mode=local_only。确认写入后请自动发布到 GitHub。",
       "expected_output": "允许本地写入，但应拒绝自动发布，并提示用户先绑定自己的 GitHub 仓库或重新完成 github_bound onboarding。",
       "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "处理这篇微信公众号文章：https://mp.weixin.qq.com/s/f-TA9pmFxqZeVevMnvMvew",
+      "expected_output": "先完成 onboarding 检查；若可继续，在提案中说明需要用 scripts/fetch-wechat-article.sh 或 wechat-article-to-markdown 转为 Markdown，确认后保存到 raw/，抓取失败时不能编造正文。",
+      "files": []
     }
   ]
 }

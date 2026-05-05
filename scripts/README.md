@@ -47,4 +47,24 @@ scripts/publish.sh "chore: update knowledge from confirmed intake"
 
 它会检查 `origin`，拒绝把用户知识推送到上游 `Ivor-NCUT/dumbledore`，然后执行 `git add`、`commit`、`pull --rebase` 和 `push`。
 
+### `fetch-wechat-article.sh`
+
+确认写入微信公众号文章后，Agent 用它把 `mp.weixin.qq.com` 链接转换为 `raw/` 下的 Markdown 原文。
+
+```bash
+scripts/fetch-wechat-article.sh "https://mp.weixin.qq.com/s/..."
+```
+
+它会调用 `wechat-article-to-markdown`。如果本机还没有安装转换器，先运行：
+
+```bash
+uv tool install wechat-article-to-markdown
+```
+
+或：
+
+```bash
+pipx install wechat-article-to-markdown
+```
+
 它还会检查 `.dumbledore/state.json`，只有在 `publish_mode=github_bound` 时才允许自动发布。
